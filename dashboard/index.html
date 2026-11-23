@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breakout Radar — Token Launch Radar</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="mark">&#9650;</div>
+    <div>
+      <h1>Breakout Radar</h1>
+      <p class="sub">Token launch radar &middot; momentum-breakout model v8 &middot; snapshot <span id="asof">&mdash;</span></p>
+    </div>
+  </div>
+  <div class="counts">
+    <div class="count"><b id="c-board">&mdash;</b><span>ranked</span></div>
+    <div class="count"><b id="c-watch">&mdash;</b><span>watchlist</span></div>
+    <div class="count hot"><b id="c-break">&mdash;</b><span>breakout / heating</span></div>
+    <div class="count"><b id="c-live">&mdash;</b><span>already trading</span></div>
+  </div>
+</header>
+
+<section class="model" id="model-strip">
+  <p><strong>How a row is valued.</strong> <span id="model-formula">implied = base &times; momentum &times; runway</span></p>
+  <p class="fine" id="model-consts"></p>
+  <p class="fine">A protocol <em>records no token</em> when the snapshot carries no market cap, CoinGecko id or symbol for it. That is the record, not proof it has none.</p>
+</section>
+
+<nav class="tabs">
+  <button id="tab-board" class="tab active" type="button">Ranked board</button>
+  <button id="tab-live" class="tab" type="button">Already trading</button>
+</nav>
+
+<section class="controls" id="controls">
+  <input id="q" type="search" placeholder="Search name or slug&hellip;" aria-label="Search protocols">
+  <select id="cat" aria-label="Category"><option value="">All categories</option></select>
+  <select id="band" aria-label="Momentum band">
+    <option value="">All bands</option>
+    <option>BREAKOUT</option><option>HEATING</option><option>STEADY</option><option>COOLING</option><option>FADING</option>
+  </select>
+  <label class="check"><input id="watch-only" type="checkbox"> Watchlist only</label>
+  <label class="sort">Sort
+    <select id="sort">
+      <option value="implied">Implied value</option>
+      <option value="tvl">TVL</option>
+      <option value="growth">7-day change</option>
+      <option value="age">Age (no token)</option>
+      <option value="rank">Rank</option>
+    </select>
+  </label>
+  <span class="shown" id="shown"></span>
+</section>
+
+<main class="nodetail">
+  <div class="tablewrap">
+    <table id="board">
+      <thead><tr>
+        <th data-k="rank">#</th>
+        <th data-k="name">Protocol</th>
+        <th data-k="category">Category</th>
+        <th data-k="chains">Chains</th>
+        <th data-k="tvl" class="num">TVL</th>
+        <th data-k="growth" class="num">7d</th>
+        <th data-k="band">Band</th>
+        <th data-k="implied" class="num">Implied value</th>
+        <th data-k="age" class="num">Age</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="empty" id="empty" hidden>No protocol matches this filter.</p>
+  </div>
+
+  <aside class="detail" id="detail" hidden>
+    <button class="close" id="detail-close" type="button" aria-label="Close detail">&times;</button>
+    <h2 id="d-name"></h2>
+    <p class="d-sub" id="d-sub"></p>
+    <div class="d-stats" id="d-stats"></div>
+    <h3>Why this value</h3>
+    <div class="breakdown" id="d-break"></div>
+    <p class="d-band" id="d-band"></p>
+    <h3>Farm plan</h3>
+    <ol class="steps" id="d-steps"></ol>
+    <p class="fine">Farming is not free and an airdrop is never promised. Verify every step on the protocol's own page before you send funds.</p>
+  </aside>
+</main>
+
+<section class="sandbox">
+  <h2>Model sandbox <span class="fine">— change the model, watch the board move</span></h2>
+  <p class="fine">The same formula as the board, recomputed in your browser from the snapshot's own figures. Nothing here is saved; the board above is the submitted model.</p>
+  <div class="sliders">
+    <label>Growth weight <b id="v-gw"></b><input id="s-gw" type="range" min="0" max="0.02" step="0.001" value="0.008"></label>
+    <label>Breakout kick <b id="v-bk"></b><input id="s-bk" type="range" min="0" max="0.02" step="0.001" value="0.009"></label>
+    <label>Base multiple <b id="v-bm"></b><input id="s-bm" type="range" min="0.05" max="0.5" step="0.01" value="0.22"></label>
+  </div>
+  <p id="sandbox-out" class="fine"></p>
+</section>
+
+<footer>
+  <p><strong>Method.</strong> The board ranks pre-token protocols by implied value = base &times; momentum &times; runway, from the snapshot's TVL, 7-day TVL change and days listed with no token. The watchlist is the floor, never the ceiling: the board adds the strongest pre-token protocols below it. Live-token protocols are shown apart, at the market's own values, never mixed into the ranking.</p>
+  <p class="fine" id="source"></p>
+  <p class="fine">Breakout Radar is an entry for the make.fun token launch radar bounty. Implied values are this entry's own claim, not a prediction that a token will be issued or what it will be worth.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
